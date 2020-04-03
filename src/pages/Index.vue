@@ -24,8 +24,13 @@ export default {
     this.startApp()
   },
   methods: {
-    startApp() {
-      console.trace('ll')
+    async startApp() {
+      var cryptoZombiesAddress = "0x18fcb305819C3Bb938226cA19519cD4fa1cf6EF7";
+
+      web3.eth.net.isListening()
+        .then(() => console.log('web3 is connected'))
+        .catch(e => console.log('Wow. Something went wrong'));
+      // cryptoZombies = new web3.eth.Contract(cryptoZombiesABI, cryptoZombiesAddress);
     },
   },
 }
