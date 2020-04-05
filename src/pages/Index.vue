@@ -23,6 +23,7 @@ export default {
     }
     this.startApp()
   },
+  // contract must be vdata
   methods: {
     async startApp() {
       var cryptoZombiesAddress = "0x18fcb305819C3Bb938226cA19519cD4fa1cf6EF7";
@@ -30,7 +31,49 @@ export default {
       web3.eth.net.isListening()
         .then(() => console.log('web3 is connected'))
         .catch(e => console.log('Wow. Something went wrong'));
-      // cryptoZombies = new web3.eth.Contract(cryptoZombiesABI, cryptoZombiesAddress);
+      this.$axios
+        .get('https://api-ropsten.etherscan.io/api?module=contract&action=getabi&address=0x18fcb305819C3Bb938226cA19519cD4fa1cf6EF7&apikey=I3P8MTTDGN26R7HQIWTRTEDRGM3RZNUGHF')
+        .then(res => {
+          var contractABI = "";
+          contractABI = JSON.parse(res.data.result);
+          if (contractABI) {
+            var cryptoZombies = new web3.eth.Contract(contractABI);
+            console.log(cryptoZombies)
+          } else console.error(contractABI)
+        })
+      const userAccount = web3.eth.currentProvider.selectedAddress;
+      if (userAccount) {
+        console.log(userAccount)
+        getZombiesByOwner(userAccount)
+            .then(displayZombies);
+      } else console.error(userAccount)
+    },
+    getZombiesByOwner(owner) {
+      return cryptoZombies.methods.getZombiesByOwner(owner).call()
+    },
+    displayZombies(ids) {
+      $("#zombies").empty();
+      for (id of ids) {
+        // Look up zombie details from our contract. Returns a `zombie` object
+        getZombieDetails(id)
+        .then(function(zombie) {
+          // Using ES6's "template literals" to inject variables into the HTML.
+          // Append each one to our #zombies div
+          $("#zombies").append(`<div class="zombie">
+            <ul>
+              <li>Name: ${zombie.name}</li>
+              <li>DNA: ${zombie.dna}</li>
+              <li>Level: ${zombie.level}</li>
+              <li>Wins: ${zombie.winCount}</li>
+              <li>Losses: ${zombie.lossCount}</li>
+              <li>Ready Time: ${zombie.readyTime}</li>
+            </ul>
+          </div>`);
+        });
+      }
+    },
+    getZombieDetails(id) {
+      return cryptoZombies.methods.zombies(id).call()
     },
   },
 }

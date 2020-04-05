@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          CryptoZombies Front
         </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
