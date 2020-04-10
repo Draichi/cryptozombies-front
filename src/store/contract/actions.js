@@ -15,32 +15,16 @@ export const enableEthereum = ({ commit, dispatch }) => {
 }
 
 export const getContractInstance = async ({ commit, getters }) => {
-  const web3 = getters['web3']
-  const cryptoZombiesAddress = '0x18fcb305819C3Bb938226cA19519cD4fa1cf6EF7';
-  const apiKey = 'I3P8MTTDGN26R7HQIWTRTEDRGM3RZNUGHF'
-  const url = `https://api-ropsten.etherscan.io/api?module=contract&action=getabi&address=${cryptoZombiesAddress}&apikey=${apiKey}`
+  const web3 = await getters['web3']
+  const cryptoZombiesContractAddress = '0x18fcb305819C3Bb938226cA19519cD4fa1cf6EF7';
+  const etherscanApiKey = 'I3P8MTTDGN26R7HQIWTRTEDRGM3RZNUGHF'
+  const etherscanEndpoint = `https://api-ropsten.etherscan.io/api?module=contract&action=getabi&address=${cryptoZombiesContractAddress}&apikey=${etherscanApiKey}`
 
-  web3.eth.net.isListening()
-    .then(() => console.log('web3 is connected'))
-    .catch(e => console.log('Wow. Something went wrong'));
-  const res = await axios.get(url)
-  const contractABI = await JSON.parse(res.data.result);
-  console.log(contractABI);
-  const cryptoZombies = new web3.eth.Contract(contractABI)
-  // > setar o contracto commit
-  console.log('>', cryptoZombies)
-    // .then(res => {
-    //   var contractABI = "";
-    //   contractABI = JSON.parse(res.data.result);
-    //   if (contractABI) {
-    //     var cryptoZombies = new web3.eth.Contract(contractABI);
-    //     console.log(cryptoZombies)  
-    //   } else console.error(contractABI)
-    // })
-  const userAccount = web3.eth.currentProvider.selectedAddress;
-  if (userAccount) {
-    console.log(userAccount)
-    // getZombiesByOwner(userAccount)
-    //     .then(displayZombies);
-  } else console.error(userAccount)
+  const etherscanResponse = await axios.get(etherscanEndpoint)
+  const contractABI = await JSON.parse(etherscanResponse.data.result);
+  const contractInstance = new web3.eth.Contract(contractABI)
+  commit('setContractInstance', contractInstance)
+
+  // * pegar user account antes de chamar os methods
+  // * os methods podem se chamados do componente
 }
