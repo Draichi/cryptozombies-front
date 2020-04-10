@@ -1,5 +1,10 @@
 <template>
   <q-page class="flex flex-center">
+    {{ userLogged }}
+    <div v-if="userLogged">
+      you're logged !!
+    </div>
+    <div v-else>Please use log using metamast</div>
     <img
       alt="Quasar logo"
       src="~assets/quasar-logo-full.svg"
@@ -76,5 +81,10 @@ export default {
       return cryptoZombies.methods.zombies(id).call()
     },
   },
+  computed: {
+    userLogged() {
+      return this.$store.state.contract['userAccount']
+    }
+  }
 }
 </script>

@@ -28,3 +28,17 @@ export const getContractInstance = async ({ commit, getters }) => {
   // * pegar user account antes de chamar os methods
   // * os methods podem se chamados do componente
 }
+
+export const checkUserAccount = async ({ commit, getters, state }) => {
+  setInterval(() => {
+    const userAccount = state['userAccount'];
+    const providerAccount = getters['providerAccount'];
+    console.log('userAccount', userAccount)
+    console.log('providerAccount', providerAccount)
+    if (providerAccount !== userAccount) commit('setUserAccount', providerAccount)
+  }, 1000)
+}
+
+export const getZombiesByOwner = async ({ commit }) => {
+
+}
