@@ -9,10 +9,12 @@
       alt="Quasar logo"
       src="~assets/quasar-logo-full.svg"
     >
+    <q-btn @click="getZombiesByOwner">get zombies by owner</q-btn>
   </q-page>
 </template>
 
 <script>
+import store from '../store';
 // import Web3 from 'web3';
 export default {
   name: 'PageIndex',
@@ -30,6 +32,9 @@ export default {
   },
   // > contract must be vdata
   methods: {
+    getZombiesByOwner() {
+      this.$store.dispatch('contract/getZombiesByOwner')
+    },
     async startApp() {
       var cryptoZombiesAddress = "0x18fcb305819C3Bb938226cA19519cD4fa1cf6EF7";
 
@@ -53,9 +58,9 @@ export default {
             .then(displayZombies);
       } else console.error(userAccount)
     },
-    getZombiesByOwner(owner) {
-      return cryptoZombies.methods.getZombiesByOwner(owner).call()
-    },
+    // getZombiesByOwner(owner) {
+    //   return cryptoZombies.methods.getZombiesByOwner(owner).call()
+    // },
     displayZombies(ids) {
       $("#zombies").empty();
       for (id of ids) {
