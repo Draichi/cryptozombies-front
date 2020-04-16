@@ -24,9 +24,6 @@ export const getContractInstance = async ({ commit, getters }) => {
   const contractABI = await JSON.parse(etherscanResponse.data.result);
   const contractInstance = new web3.eth.Contract(contractABI, cryptoZombiesContractAddress)
   commit('setContractInstance', contractInstance)
-
-  // * pegar user account antes de chamar os methods
-  // * os methods podem se chamados do componente
 }
 
 export const checkUserAccount = async ({ commit, getters, state }) => {
@@ -41,12 +38,10 @@ export const checkUserAccount = async ({ commit, getters, state }) => {
 
 export const getZombiesByOwner = async ({ commit, getters, state }) => {
   const contractInstance = await getters['contractInstance']
-  const web3 = await getters['web3']
   const userAccount = state['userAccount'];
-  const rrr = await web3.eth.net.getId()
-  console.log('>>>', rrr)
-  console.log('conteract acc', userAccount)
-  const res = await contractInstance.methods.getZombiesByOwner(userAccount).call()
-  console.log('conteract instance', contractInstance)
-  console.log('conteract res', res)
+  const zombiesByOwner = await contractInstance.methods.getZombiesByOwner(userAccount).call()
+  console.log('zombiesByOwner', zombiesByOwner)
+  console.log('zombiesByOwner', contractInstance.methods)
+  const zombieDetails = await contractInstance.methods.zombies(zombiesByOwner[0]).call()
+  console.log('zombieDetails', zombieDetails)
 }
