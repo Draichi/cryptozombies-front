@@ -9,6 +9,7 @@
       alt="Quasar logo"
       src="~assets/quasar-logo-full.svg"
     >
+    <q-btn @click="checkUserAccount">get zombies by owner</q-btn>
     <q-btn @click="getZombiesByOwner">get zombies by owner</q-btn>
   </q-page>
 </template>
@@ -19,19 +20,11 @@ import store from '../store';
 export default {
   name: 'PageIndex',
   created() {
-    // if (typeof web3 !== 'undefined') {
-    //   web3 = new Web3(web3.currentProvider);
-    //   ethereum.enable()
-    //   console.log('vc tem provider')
-    // } else {
-    //   console.log('vc nao tem provider')
-    //   const provider = new Web3.providers.HttpProvider("https://ropsten.infura.io/v3/cbf946aba73046d8ab55e4575a60da04");
-    //   web3 = new Web3(provider);
-    // }
-    // this.startApp()
   },
-  // > contract must be vdata
   methods: {
+    checkUserAccount() {
+      this.$store.dispatch('contract/checkUserAccount')
+    },
     getZombiesByOwner() {
       this.$store.dispatch('contract/getZombiesByOwner')
     },
